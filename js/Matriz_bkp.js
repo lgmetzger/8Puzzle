@@ -29,21 +29,15 @@ function Matriz(_tamanho, _canvas){
 		}
 		
 		var cont = 1;
-		var contIndice = 1;
 		var celulaMeio = Math.floor(this.tamanho/2);
-		
 		for (var k = 0; k < this.tamanho; k++) {
 			for (var j = 0; j < this.tamanho; j++) {
 				if (k == celulaMeio && j == celulaMeio) {
-					//this.mat[k][j] = '';
-					this.mat[k][j] = new Celula(0, this.tamanhoPixels, contIndice);
+					this.mat[k][j] = 0;
 				} else {
-					//this.mat[k][j] = cont;
-					this.mat[k][j] = new Celula(cont, this.tamanhoPixels, contIndice);
+					this.mat[k][j] = cont;
 					cont++;
 				}
-				
-				contIndice++;
 			}
 		}
 	}
@@ -60,12 +54,12 @@ function Matriz(_tamanho, _canvas){
 				// TODO: essa funcao pode ter um parametro BOOL, para dizer se deve desenhar as celulas ou nao. Caso NAO, desenha somente os numeros (para atualiza-los)
 				this.contexto.beginPath();
 				this.contexto.rect(80 + (k*this.tamanhoPixels), 15 + (i*this.tamanhoPixels), this.tamanhoPixels, this.tamanhoPixels);
-				this.contexto.lineWidth = 3;
+				this.contexto.lineWidth = 5;
 				this.contexto.strokeStyle = "black";
 				this.contexto.stroke();
 				
 				// Desenha o numero dentro da celula
-				this.contexto.fillText(this.mat[i][k].valor, 120 + (k*this.tamanhoPixels), 70 + (i*this.tamanhoPixels));
+				this.contexto.fillText(this.mat[i][k], 120 + (k*this.tamanhoPixels), 70 + (i*this.tamanhoPixels));
 			}
 		}
 	}
@@ -80,62 +74,14 @@ function Matriz(_tamanho, _canvas){
 		var xRelativoCanvas = posX-this.canvas.offsetLeft;
 		var yRelativoCanvas = posY-this.canvas.offsetTop;
 		
-		// Primeira linha
-		if (yRelativoCanvas < 106 && yRelativoCanvas > 16) {
-			this.defineCelulaClicada(0, xRelativoCanvas);
-		} else if (yRelativoCanvas < 196 && yRelativoCanvas > 107) {
-			// Segunda linha
-			
-			this.defineCelulaClicada(1, xRelativoCanvas);
-		} else if (yRelativoCanvas < 287 && yRelativoCanvas > 196) {
-			// Terceira linha
-			
-			this.defineCelulaClicada(2, xRelativoCanvas);
-		}
-		
-		/*for (var i = 0; i < this.tamanho; i++) {
+		for (var i = 0; i < this.tamanho; i++) {
 			for (var k = 0; k < this.tamanho; k++) {
 				if (xRelativoCanvas > (80 + (k*this.tamanhoPixels))) {
 					alert("dentro x");
 				}
 			}
-		}*/
-		
-		this.contexto.clearRect(0, 0, 425, 300);
-		this.desenhar();
-		
-	}
-	
-	// Funcao interna auxiliar
-	this.defineCelulaClicada = function(_linha, xRelativoCanvas){
-		if (xRelativoCanvas > 80 && xRelativoCanvas < 170) {
-			this.buscaEInverteValor(_linha, 0);
-		} else if (xRelativoCanvas > 170 && xRelativoCanvas < 260) {
-			this.buscaEInverteValor(_linha, 1);
-		} else if (xRelativoCanvas > 260 && xRelativoCanvas < 350) {
-			this.buscaEInverteValor(_linha, 2);
-		}
-	}
-	
-	this.buscaEInverteValor = function(_linha, _coluna) {
-		var valorNovo = parseInt(window.prompt("Novo valor", ""));
-		var valorAntigo = this.mat[_linha][_coluna].valor;
-		
-		if (valorNovo > 8 || valorNovo < 0 || valorNovo == valorAntigo || isNaN(valorNovo)) {
-			return false;
 		}
 		
-		for (var i = 0; i < this.tamanho; i++) {
-			for (var j = 0; j < this.tamanho; j++) {
-				if (this.mat[i][j].valor == valorNovo) {
-					this.mat[i][j].valor = valorAntigo;
-					
-					break;
-				}
-			}
-		}
-		
-		this.mat[_linha][_coluna].valor = valorNovo;
 	}
 	
 	// Inicializa a matriz assim que o objeto é instanciado
