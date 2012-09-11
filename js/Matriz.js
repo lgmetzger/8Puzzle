@@ -52,20 +52,14 @@ function Matriz(_tamanho, _canvas){
 
 	// Desenha os traços da matriz no canvas de destino
 	this.desenhar = function() {
+		this.contexto.clearRect(0, 0, 425, 300);
 		
 		for (var i = 0; i < this.tamanho; i++) {
 			for (var k = 0; k < this.tamanho; k++) {
 				// Desenha a celula da matriz
-				// TODO: pode ser uma boa ideia criar um objeto Celula e instancia-lo aqui para cada celula da matriz
-				// TODO: essa funcao pode ter um parametro BOOL, para dizer se deve desenhar as celulas ou nao. Caso NAO, desenha somente os numeros (para atualiza-los)
-				this.contexto.beginPath();
-				this.contexto.rect(80 + (k*this.tamanhoPixels), 15 + (i*this.tamanhoPixels), this.tamanhoPixels, this.tamanhoPixels);
-				this.contexto.lineWidth = 3;
-				this.contexto.strokeStyle = "black";
-				this.contexto.stroke();
 				
-				// Desenha o numero dentro da celula
-				this.contexto.fillText(this.mat[i][k].valor, 120 + (k*this.tamanhoPixels), 70 + (i*this.tamanhoPixels));
+				this.mat[i][k].desenhar(this.contexto, i, k);
+				
 			}
 		}
 	}
@@ -93,26 +87,19 @@ function Matriz(_tamanho, _canvas){
 			this.defineCelulaClicada(2, xRelativoCanvas);
 		}
 		
-		/*for (var i = 0; i < this.tamanho; i++) {
-			for (var k = 0; k < this.tamanho; k++) {
-				if (xRelativoCanvas > (80 + (k*this.tamanhoPixels))) {
-					alert("dentro x");
-				}
-			}
-		}*/
-		
-		this.contexto.clearRect(0, 0, 425, 300);
 		this.desenhar();
-		
 	}
 	
 	// Funcao interna auxiliar
 	this.defineCelulaClicada = function(_linha, xRelativoCanvas){
 		if (xRelativoCanvas > 80 && xRelativoCanvas < 170) {
+			// Primeira coluna
 			this.buscaEInverteValor(_linha, 0);
 		} else if (xRelativoCanvas > 170 && xRelativoCanvas < 260) {
+			// Segunda coluna
 			this.buscaEInverteValor(_linha, 1);
 		} else if (xRelativoCanvas > 260 && xRelativoCanvas < 350) {
+			// Terceira coluna
 			this.buscaEInverteValor(_linha, 2);
 		}
 	}

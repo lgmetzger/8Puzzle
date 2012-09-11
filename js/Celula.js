@@ -11,7 +11,18 @@ function Celula(_valor, _tamanhoPixels, _indice) {
 	
 	this.tamanhoPixels = _tamanhoPixels;
 	
-	this.desenhar = function() {
+	// Cor de fundo da celula
+	this.corDeFundo = "green";
+	
+	this.desenhar = function(_contexto, _i, _k) {
+		_contexto.beginPath();
+		_contexto.rect(80 + (_k*this.tamanhoPixels), 15 + (_i*this.tamanhoPixels), this.tamanhoPixels, this.tamanhoPixels);
+		_contexto.lineWidth = 3;
+		_contexto.strokeStyle = "black";
+		_contexto.stroke();
 		
+		// Desenha o numero dentro da celula
+		_contexto.fillStyle = "black";
+		_contexto.fillText(this.valor == 0 ? '' : this.valor, 120 + (_k*this.tamanhoPixels), 70 + (_i*this.tamanhoPixels));
 	}
 }
