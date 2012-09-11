@@ -10,9 +10,12 @@ function inicio(){
 	
 	// Variáveis globais que não são as matrizes principais
 	matrizAuxiliar = new Array(3);
+
 	//possibilidades;
 	custo = 0;	// custo = G
 	heuristica = 0; // heuristica = H
+	
+	possibilidadesJaTomadas = new Array();
 	
 	window.addEventListener("click", clicou, false);
 }
@@ -27,11 +30,15 @@ function clicou(e){
 	} else if (canvasClicado == "canv_final") {
 		matrizFinal.tratarClick(posX, posY);
 	}
+	
+	matrizPrincipal.mat = matrizInicial.mat;
+	matrizPrincipal.desenhar();
 }
 
 function executar() {
 	matrizPrincipal.mat = matrizInicial.mat;
 	matrizPrincipal.desenhar();
+	
 	var brecou = false;
 	
 	for (var i = 0; i < 3; i++) {
@@ -48,10 +55,10 @@ function executar() {
 	// A partir da configuracao atual, calcular o F de todas as possibilidades
 	
 	
-	alert(comparaMatrizes(matrizPrincipal.mat, matrizFinal.mat));
+	
 	while1:
 	while (!comparaMatrizes(matrizPrincipal.mat, matrizFinal.mat)) {
-		alert("entrou while");
+		
 		for (var i = 0; i < matrizPrincipal.tamanho; i++) {
 			/*if (brecou) {
 				alert("brecando");
@@ -215,10 +222,10 @@ function executar() {
 									
 									possibilidadeObj = new Possibilidade( matrizAuxiliar, i, j, 0, 0 );
 								} else if (k == 1) {
-									matrizAuxiliar[i][j] = matrizAuxiliar[0][1];
-									matrizAuxiliar[0][1] = 0;
+									matrizAuxiliar[i][j] = matrizAuxiliar[0][2];
+									matrizAuxiliar[0][2] = 0;
 									
-									possibilidadeObj = new Possibilidade( matrizAuxiliar, i, j, 0, 1 );
+									possibilidadeObj = new Possibilidade( matrizAuxiliar, i, j, 0, 2 );
 								} else if (k == 2) {
 									matrizAuxiliar[i][j] = matrizAuxiliar[1][1];
 									matrizAuxiliar[1][1] = 0;
@@ -316,7 +323,7 @@ function executar() {
 					
 					matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 					
-					// TODO: agora soh precisa criar uma lista pra ver as configuracoes ja fechadas, pq senao pode entrar em loop infinito
+					// TODO: agora soh precisa criar uma lista pra ver as configuracoes ja fechadas, pq senao entra em loop infinito
 					
 					//i = 0;
 					//j = 0;
@@ -324,7 +331,7 @@ function executar() {
 					// precisa brecar os dois lacos da matriz e voltar pro while
 					
 					brecou = true;
-					alert("break");
+					
 					//break;
 					break while1;
 				}
@@ -351,23 +358,75 @@ function executar() {
 }*/
 
 function verificaEAplicaMelhorPossibilidade() {
+	
+	// AQUI ESTÁ O PROBLEMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	// pensar num jeito melhor de atribuir o "menor"
+	// tem que ser o menor possível que ainda nao tenha sido tomada
+	
+	// percorrer o array antes e excluir dele as que ja foram tomadas
+	
+	//excluir:
+	for (var i = 0; i < possibilidades.length; i++) {
+		if (possibilidadeJaFoiTomada(possibilidades[i])) {
+			possibilidades.splice(i, 1);
+			//break excluir;
+			i--;
+		}
+	}
+	
+	
 	var menor = possibilidades[0].total;
 	var cont = 0;
 	var indice = 0;
 	
+	//verificar melhor aqui
+	
 	for (var i = 0; i < possibilidades.length; i++) {
-		if (menor > possibilidades[i].total) {
+		if ( menor > possibilidades[i].total ) {
 			menor = possibilidades[i].total;
 			indice = i;
 			cont = 1;
-		} else if (menor == possibilidades[i].total) {
-			cont++;
 		}
 	}
+	
+	
+	//
+	
+	/*for (var i = 0; i < possibilidades.length; i++) {
+		if (!possibilidadeJaFoiTomada(possibilidades[i])) {
+			if (menor > possibilidades[i].total) {
+				menor = possibilidades[i].total;
+				indice = i;
+				cont = 1;
+			} else if (menor == possibilidades[i].total) {
+				// desenha as opcoes no quarto canvas
+			
+				cont++;
+			}
+		}
+	}*/
 	
 	// pega essa buxa haha
 	matrizPrincipal.mat[possibilidades[indice].linha1][possibilidades[indice].coluna1].valor = matrizPrincipal.mat[possibilidades[indice].linha][possibilidades[indice].coluna].valor;
 	matrizPrincipal.mat[possibilidades[indice].linha][possibilidades[indice].coluna].valor = 0;
+	
+	// faz uma cópia da matrizPrincipal
+	//var novaMatriz = new Matriz(3, false);
+	//novaMatriz.setMatrizInterna(matrizPrincipal.mat);
+	
+	//possibilidades[indice].setMatrizParaComparacao(novaMatriz.mat);
+	
+	//possibilidadesJaTomadas.push( novaMatriz );
+	possibilidadesJaTomadas.push( possibilidades[indice] );
+}
+
+function possibilidadeJaFoiTomada(_possib) {
+	for (var y = 0; y < possibilidadesJaTomadas.length; y++) {
+		if (comparaMatrizes(_possib.mat.mat, possibilidadesJaTomadas[y].mat.mat)) {
+			return true;
+		}	
+	}
+	return false;
 }
 
 function comparaMatrizes(_matriz1, _matriz2) {
@@ -385,6 +444,13 @@ function comparaMatrizes(_matriz1, _matriz2) {
 }
 
 function copiaMatriz(_origem, _destino) {
+	if (!_origem) {
+		_origem = new Array(_destino.length);
+		for (var x = 0; x < _destino.length; x++) {
+			_origem[x] = new Array(_destino.length);
+		}
+	}
+
 	for (var i = 0; i < 3; i++) {
 		for (var j = 0; j < 3; j++) {
 			_origem[i][j] = _destino[i][j].valor;
@@ -393,23 +459,6 @@ function copiaMatriz(_origem, _destino) {
 	
 	return _origem;
 }
-
-
-/*function trataPossibilidade() {
-	
-
-	// calcula
-	heuristica = calculaHeuristica(matrizAuxiliar);
-	custo++;
-	
-	// grava no array
-	possibilidades.push( heuristica + custo );
-	
-	// reseta a matriz auxiliar
-	matrizAuxiliar = matrizPrincipal.mat;
-	
-	custo = custoAnterior;
-}*/
 
 
 window.addEventListener("load", inicio, false);

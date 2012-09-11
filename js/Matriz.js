@@ -9,13 +9,15 @@ function Matriz(_tamanho, _canvas){
 	// Array contendo a matriz em si
 	this.mat = new Array(_tamanho);
 	
-	// Guarda o objeto do canvas para usar as propriedades 'offsetLeft', 'offsetTop', etc
-	this.canvas = _canvas;
-	
-	// Contexto do canvas (necessario para desenhar)
-	this.contexto = _canvas.getContext("2d");
-	this.contexto.font = "36px Tahoma";
-	this.contexto.fillStyle = "black";
+	if (_canvas) {
+		// Guarda o objeto do canvas para usar as propriedades 'offsetLeft', 'offsetTop', etc
+		this.canvas = _canvas;
+		
+		// Contexto do canvas (necessario para desenhar)
+		this.contexto = _canvas.getContext("2d");
+		this.contexto.font = "36px Tahoma";
+		this.contexto.fillStyle = "black";
+	}
 	
 	// Tamanho do lado do quadrado de cada celula da matriz
 	this.tamanhoPixels = 90;
@@ -60,6 +62,22 @@ function Matriz(_tamanho, _canvas){
 				
 				this.mat[i][k].desenhar(this.contexto, i, k);
 				
+			}
+		}
+	}
+	
+	/* *********************************************************************************** */
+	
+	// Define a matriz interna a partir de uma outra já existente
+	this.setMatrizInterna = function(_novaMatriz) {
+	
+		for (var i = 0; i < this.tamanho; i++) {
+			for (var j = 0; j < this.tamanho; j++) {
+				if (_novaMatriz[i][j].valor) {
+					this.mat[i][j].valor = _novaMatriz[i][j].valor;
+				} else {
+					this.mat[i][j].valor = _novaMatriz[i][j];
+				}
 			}
 		}
 	}
