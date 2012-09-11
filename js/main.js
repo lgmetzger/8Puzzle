@@ -32,18 +32,33 @@ function clicou(e){
 function executar() {
 	matrizPrincipal.mat = matrizInicial.mat;
 	matrizPrincipal.desenhar();
+	var brecou = false;
 	
 	for (var i = 0; i < 3; i++) {
 		matrizAuxiliar[i] = new Array(3);
 	}
 	
-	matrizAuxiliar = matrizPrincipal.mat;
+	// PROBLEMINHA GENTEM: a matriz nao eh COPIADA e sim apontada
+	// OU SEJA: depois dessa linha, quando alterarmos a matrizAuxiliar, estaremos alterando tambem a matrizPrincipal.mat
+	//matrizAuxiliar = matrizPrincipal.mat;
+	
+	// entao usaremos uma funcao para copiar a matriz
+	matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 	
 	// A partir da configuracao atual, calcular o F de todas as possibilidades
 	
-	// Enquanto matrizPrincipal != matrizFinal ...
+	
+	alert(comparaMatrizes(matrizPrincipal.mat, matrizFinal.mat));
+	while1:
 	while (!comparaMatrizes(matrizPrincipal.mat, matrizFinal.mat)) {
+		alert("entrou while");
 		for (var i = 0; i < matrizPrincipal.tamanho; i++) {
+			/*if (brecou) {
+				alert("brecando");
+				brecou = false;
+				break;
+			}*/
+		
 			for (var j = 0; j < matrizPrincipal.tamanho; j++) {
 				if (matrizPrincipal.mat[i][j].valor == 0) {
 					// Calcula as possibilidades
@@ -54,8 +69,6 @@ function executar() {
 						// Ordem: cima, direita, baixo, esquerda
 						possibilidades = new Array();
 						var custoAnterior = custo;
-						
-						// ao invés de fazer essa ladainha toda e repeti-la toda santa vez, fazer uma funçaozinha, passando a matrizAuxiliar, custo, i, j
 						
 						for (var k = 0; k < 4; k++) {
 							
@@ -84,7 +97,8 @@ function executar() {
 							}
 							
 							possibilidades.push( possibilidadeObj );
-							matrizAuxiliar = matrizPrincipal.mat;
+							//matrizAuxiliar = matrizPrincipal.mat;
+							matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 						}
 						
 					} else if ((i == 0 && j == 0) || (i == 0 && j == 2) || (i == 2 && j == 0) || (i == 2 && j == 2)) {
@@ -112,7 +126,8 @@ function executar() {
 								}
 								
 								possibilidades.push( possibilidadeObj );
-								matrizAuxiliar = matrizPrincipal.mat;
+								//matrizAuxiliar = matrizPrincipal.mat;
+								matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 							
 							}
 						} else if (i == 0 && j == 2) {
@@ -134,7 +149,8 @@ function executar() {
 								}
 								
 								possibilidades.push( possibilidadeObj );
-								matrizAuxiliar = matrizPrincipal.mat;
+								//matrizAuxiliar = matrizPrincipal.mat;
+								matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 							
 							}
 						} else if (i == 2 && j == 0) {
@@ -156,7 +172,8 @@ function executar() {
 								}
 								
 								possibilidades.push( possibilidadeObj );
-								matrizAuxiliar = matrizPrincipal.mat;
+								//matrizAuxiliar = matrizPrincipal.mat;
+								matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 							
 							}
 						} else if (i == 2 && j == 2) {
@@ -178,8 +195,8 @@ function executar() {
 								}
 								
 								possibilidades.push( possibilidadeObj );
-								matrizAuxiliar = matrizPrincipal.mat;
-							
+								//matrizAuxiliar = matrizPrincipal.mat;
+								matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 							}
 						}
 					} else {
@@ -210,7 +227,8 @@ function executar() {
 								}
 								
 								possibilidades.push( possibilidadeObj );
-								matrizAuxiliar = matrizPrincipal.mat;
+								//matrizAuxiliar = matrizPrincipal.mat;
+								matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 							}
 						} else if (i == 1 && j == 2) {
 							for (var k = 0; k < 3; k++) {
@@ -234,7 +252,8 @@ function executar() {
 								}
 								
 								possibilidades.push( possibilidadeObj );
-								matrizAuxiliar = matrizPrincipal.mat;
+								//matrizAuxiliar = matrizPrincipal.mat;
+								matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 							}
 						} else if (i == 2 && j == 1) {
 							for (var k = 0; k < 3; k++) {
@@ -258,7 +277,8 @@ function executar() {
 								}
 								
 								possibilidades.push( possibilidadeObj );
-								matrizAuxiliar = matrizPrincipal.mat;
+								//matrizAuxiliar = matrizPrincipal.mat;
+								matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 							}
 						} else if (i == 1 && j == 0) {
 							for (var k = 0; k < 3; k++) {
@@ -282,7 +302,8 @@ function executar() {
 								}
 								
 								possibilidades.push( possibilidadeObj );
-								matrizAuxiliar = matrizPrincipal.mat;
+								//matrizAuxiliar = matrizPrincipal.mat;
+								matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 							}
 						}
 					}
@@ -291,9 +312,21 @@ function executar() {
 					// passa o array de possibilidades pra ver qual a melhor e atualiza a matriz principal
 					verificaEAplicaMelhorPossibilidade();
 					custo++;
-					matrizAuxiliar = matrizPrincipal.mat;
-					i = 0;
-					j = 0;
+					//matrizAuxiliar = matrizPrincipal.mat;
+					
+					matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
+					
+					// TODO: agora soh precisa criar uma lista pra ver as configuracoes ja fechadas, pq senao pode entrar em loop infinito
+					
+					//i = 0;
+					//j = 0;
+					
+					// precisa brecar os dois lacos da matriz e voltar pro while
+					
+					brecou = true;
+					alert("break");
+					//break;
+					break while1;
 				}
 			}
 		}
@@ -333,7 +366,8 @@ function verificaEAplicaMelhorPossibilidade() {
 	}
 	
 	// pega essa buxa haha
-	matrizPrincipal.mat[possibilidades[indice].i][possibilidades[indice].j].valor = matrizPrincipal.mat[possibilidades[indice].linha][possibilidades[indice].coluna].valor;
+	matrizPrincipal.mat[possibilidades[indice].linha1][possibilidades[indice].coluna1].valor = matrizPrincipal.mat[possibilidades[indice].linha][possibilidades[indice].coluna].valor;
+	matrizPrincipal.mat[possibilidades[indice].linha][possibilidades[indice].coluna].valor = 0;
 }
 
 function comparaMatrizes(_matriz1, _matriz2) {
@@ -348,6 +382,16 @@ function comparaMatrizes(_matriz1, _matriz2) {
 	}
 	
 	return true;
+}
+
+function copiaMatriz(_origem, _destino) {
+	for (var i = 0; i < 3; i++) {
+		for (var j = 0; j < 3; j++) {
+			_origem[i][j] = _destino[i][j].valor;
+		}
+	}
+	
+	return _origem;
 }
 
 

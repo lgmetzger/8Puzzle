@@ -1,4 +1,4 @@
-Matriz.prototype.constructor = Matriz;
+Celula.prototype.constructor = Celula;
 
 function Celula(_valor, _tamanhoPixels, _indice) {
 	

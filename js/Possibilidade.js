@@ -2,8 +2,8 @@ Possibilidade.prototype.constructor = Possibilidade;
 
 function Possibilidade(_matrizAuxiliar, _i, _j, _linha, _coluna) {
 	
-	this.i = _i;
-	this.j = _j;
+	this.linha1 = _i;
+	this.coluna1 = _j;
 	this.linha = _linha;
 	this.coluna = _coluna;
 	this.matrizAuxiliar = _matrizAuxiliar;
