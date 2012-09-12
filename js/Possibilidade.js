@@ -8,15 +8,16 @@ function Possibilidade(_matrizAuxiliar, _i, _j, _linha, _coluna) {
 	this.coluna = _coluna;
 	this.matrizAuxiliar = _matrizAuxiliar;
 	
+	Possibilidade.quantidade++;
+	
 	this.setMatrizParaComparacao = function() {
-		this.mat = new Matriz(3, "canv_exec", 50);
+		this.mat = new Matriz(3, document.getElementById("canv_exec"), true);
 		
 		this.mat.setMatrizInterna(_matrizAuxiliar);
 	}
 	
-	this.desenhar = function() {
-		alert("desenhar");
-		this.mat.desenhar();
+	this.desenhar = function(_indice, _cor) {
+		this.mat.desenharPequena(_indice, _cor, this.valorHeuristica, custo + 1);
 	}
 	
 	this.heuristica = function () {
@@ -33,7 +34,11 @@ function Possibilidade(_matrizAuxiliar, _i, _j, _linha, _coluna) {
 		return heuristica;
 	}
 	
-	this.total = this.heuristica() + custo + 1;
+	this.valorHeuristica = this.heuristica();
+	this.total = this.valorHeuristica + custo + 1;
 	this.setMatrizParaComparacao();
 	
 }
+
+// Variavel estatica
+Possibilidade.quantidade = 0;

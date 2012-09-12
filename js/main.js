@@ -1,7 +1,7 @@
 function inicio(){
-	matrizInicial = new Matriz(3, document.getElementById("canv_inicial"));
-	matrizFinal = new Matriz(3, document.getElementById("canv_final"));
-	matrizPrincipal	= new Matriz(3, document.getElementById("canv_main"));
+	matrizInicial = new Matriz(3, document.getElementById("canv_inicial"), false);
+	matrizFinal = new Matriz(3, document.getElementById("canv_final"), false);
+	matrizPrincipal	= new Matriz(3, document.getElementById("canv_main"), false);
 	
 	matrizInicial.desenhar();
 	matrizFinal.desenhar();
@@ -315,7 +315,6 @@ function executar() {
 	}
 	
 	matrizPrincipal.desenhar();
-	alert(matrizPrincipal.mat);
 }
 
 function verificaEAplicaMelhorPossibilidade() {
@@ -333,8 +332,6 @@ function verificaEAplicaMelhorPossibilidade() {
 	var indice = 0;
 	
 	for (var i = 0; i < possibilidades.length; i++) {
-		possibilidades[i].desenhar();
-	
 		if ( menor > possibilidades[i].total ) {
 			menor = possibilidades[i].total;
 			indice = i;
@@ -342,11 +339,25 @@ function verificaEAplicaMelhorPossibilidade() {
 		}
 	}
 	
+	desenharTodasPossibilidades(indice);
+	
 	// pega essa buxa haha
 	matrizPrincipal.mat[possibilidades[indice].linha1][possibilidades[indice].coluna1].valor = matrizPrincipal.mat[possibilidades[indice].linha][possibilidades[indice].coluna].valor;
 	matrizPrincipal.mat[possibilidades[indice].linha][possibilidades[indice].coluna].valor = 0;
 	
 	possibilidadesJaTomadas.push( possibilidades[indice] );
+}
+
+function desenharTodasPossibilidades(_possibilidadeTomada) {
+	document.getElementById("canv_exec").getContext("2d").clearRect(0, 0, 425, 330);
+	
+	for (var k = 0; k < possibilidades.length; k++) {
+		if (k == _possibilidadeTomada) {
+			possibilidades[k].desenhar(k, "red");
+		} else {
+			possibilidades[k].desenhar(k);
+		}
+	}
 }
 
 function possibilidadeJaFoiTomada(_possib) {

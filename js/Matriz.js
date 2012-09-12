@@ -1,6 +1,6 @@
 Matriz.prototype.constructor = Matriz;
 
-function Matriz(_tamanho, _canvas, _tamanhoPixels){
+function Matriz(_tamanho, _canvas, _pequena){
 	/* **********************************  Propriedades ************************************** */
 
 	// Tamanho da matriz (ela sempre sera' quadrada)
@@ -9,21 +9,27 @@ function Matriz(_tamanho, _canvas, _tamanhoPixels){
 	// Array contendo a matriz em si
 	this.mat = new Array(_tamanho);
 	
+	// Se for desenhar mais de uma matriz em um mesmo contexto, ela deve ser pequena
+	this.pequena = _pequena;
+	
 	if (_canvas) {
 		// Guarda o objeto do canvas para usar as propriedades 'offsetLeft', 'offsetTop', etc
 		this.canvas = _canvas;
 		
 		// Contexto do canvas (necessario para desenhar)
 		this.contexto = _canvas.getContext("2d");
-		this.contexto.font = "36px Tahoma";
 		this.contexto.fillStyle = "black";
 	}
 	
 	// Tamanho do lado do quadrado de cada celula da matriz
-	if (!_tamanhoPixels) {
+	if (!this.pequena) {
 		this.tamanhoPixels = 90;
+		
+		this.contexto.font = "36px Tahoma";
 	} else {
-		this.tamanhoPixels = _tamanhoPixels;
+		this.tamanhoPixels = 40;
+		
+		this.contexto.font = "22px Tahoma";
 	}
 	
 	/* **********************************  Métodos ************************************** */
@@ -41,11 +47,9 @@ function Matriz(_tamanho, _canvas, _tamanhoPixels){
 		for (var k = 0; k < this.tamanho; k++) {
 			for (var j = 0; j < this.tamanho; j++) {
 				if (k == celulaMeio && j == celulaMeio) {
-					//this.mat[k][j] = '';
-					this.mat[k][j] = new Celula(0, this.tamanhoPixels, contIndice);
+					this.mat[k][j] = new Celula(0, this.tamanhoPixels, contIndice, this.pequena);
 				} else {
-					//this.mat[k][j] = cont;
-					this.mat[k][j] = new Celula(cont, this.tamanhoPixels, contIndice);
+					this.mat[k][j] = new Celula(cont, this.tamanhoPixels, contIndice, this.pequena);
 					cont++;
 				}
 				
@@ -58,7 +62,9 @@ function Matriz(_tamanho, _canvas, _tamanhoPixels){
 
 	// Desenha os traços da matriz no canvas de destino
 	this.desenhar = function() {
-		this.contexto.clearRect(0, 0, 425, 300);
+		if (!this.pequena) {
+			this.contexto.clearRect(0, 0, 425, 300);
+		}
 		
 		for (var i = 0; i < this.tamanho; i++) {
 			for (var k = 0; k < this.tamanho; k++) {
@@ -68,6 +74,34 @@ function Matriz(_tamanho, _canvas, _tamanhoPixels){
 				
 			}
 		}
+	}
+	
+	this.desenharPequena = function(_indice, _cor, _heuristica, _custo) {
+		var offsetX;
+		var offsetY;
+	
+		for (var i = 0; i < this.tamanho; i++) {
+			for (var k = 0; k < this.tamanho; k++) {
+				// Desenha a celula da matriz
+				
+				this.mat[i][k].desenharPequena(this.contexto, i, k, _indice, _cor, _heuristica, _custo);
+				
+			}
+		}
+		
+		if (_indice % 2 != 0) {
+			offsetX = this.tamanhoPixels*3 + 120;
+		} else {
+			offsetX = 40;
+		}
+		
+		if (_indice > 1) {
+			offsetY = this.tamanhoPixels*3 + 165;
+		} else {
+			offsetY = this.tamanhoPixels*3;
+		}
+		
+		this.contexto.fillText("F = " + _heuristica + " + " + _custo, offsetX + (this.tamanhoPixels), offsetY + (this.tamanhoPixels));
 	}
 	
 	/* *********************************************************************************** */
