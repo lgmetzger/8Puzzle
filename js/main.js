@@ -54,18 +54,10 @@ function executar() {
 	
 	// A partir da configuracao atual, calcular o F de todas as possibilidades
 	
-	
-	
 	while1:
 	while (!comparaMatrizes(matrizPrincipal.mat, matrizFinal.mat)) {
 		
 		for (var i = 0; i < matrizPrincipal.tamanho; i++) {
-			/*if (brecou) {
-				alert("brecando");
-				brecou = false;
-				break;
-			}*/
-		
 			for (var j = 0; j < matrizPrincipal.tamanho; j++) {
 				if (matrizPrincipal.mat[i][j].valor == 0) {
 					// Calcula as possibilidades
@@ -141,8 +133,6 @@ function executar() {
 							for (var k = 0; k < 2; k++) {
 								var possibilidadeObj;
 								
-								// muda de lugar
-								// 0,1 | 1,2 | 2,1 | 1,0
 								if (k == 0) {
 									matrizAuxiliar[i][j] = matrizAuxiliar[0][1];
 									matrizAuxiliar[0][1] = 0;
@@ -164,8 +154,6 @@ function executar() {
 							for (var k = 0; k < 2; k++) {
 								var possibilidadeObj;
 								
-								// muda de lugar
-								// 0,1 | 1,2 | 2,1 | 1,0
 								if (k == 0) {
 									matrizAuxiliar[i][j] = matrizAuxiliar[1][0];
 									matrizAuxiliar[1][0] = 0;
@@ -187,8 +175,6 @@ function executar() {
 							for (var k = 0; k < 2; k++) {
 								var possibilidadeObj;
 								
-								// muda de lugar
-								// 0,1 | 1,2 | 2,1 | 1,0
 								if (k == 0) {
 									matrizAuxiliar[i][j] = matrizAuxiliar[1][2];
 									matrizAuxiliar[1][2] = 0;
@@ -319,20 +305,9 @@ function executar() {
 					// passa o array de possibilidades pra ver qual a melhor e atualiza a matriz principal
 					verificaEAplicaMelhorPossibilidade();
 					custo++;
-					//matrizAuxiliar = matrizPrincipal.mat;
 					
 					matrizAuxiliar = copiaMatriz(matrizAuxiliar, matrizPrincipal.mat);
 					
-					// TODO: agora soh precisa criar uma lista pra ver as configuracoes ja fechadas, pq senao entra em loop infinito
-					
-					//i = 0;
-					//j = 0;
-					
-					// precisa brecar os dois lacos da matriz e voltar pro while
-					
-					brecou = true;
-					
-					//break;
 					break while1;
 				}
 			}
@@ -343,45 +318,23 @@ function executar() {
 	alert(matrizPrincipal.mat);
 }
 
-/*function calculaHeuristica(_matrizAuxiliar){
-	var cont = 0;
-
-	for (var i = 0; i < 3; i++) {
-		for (var j = 0; j < 3; j++) {
-			if (_matrizAuxiliar[i][j] != matrizFinal.mat[i][j].valor) {
-				cont++;
-			}
-		}
-	}
-	
-	return cont;
-}*/
-
 function verificaEAplicaMelhorPossibilidade() {
-	
-	// AQUI ESTÁ O PROBLEMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-	// pensar num jeito melhor de atribuir o "menor"
-	// tem que ser o menor possível que ainda nao tenha sido tomada
-	
 	// percorrer o array antes e excluir dele as que ja foram tomadas
 	
-	//excluir:
 	for (var i = 0; i < possibilidades.length; i++) {
 		if (possibilidadeJaFoiTomada(possibilidades[i])) {
 			possibilidades.splice(i, 1);
-			//break excluir;
 			i--;
 		}
 	}
-	
 	
 	var menor = possibilidades[0].total;
 	var cont = 0;
 	var indice = 0;
 	
-	//verificar melhor aqui
-	
 	for (var i = 0; i < possibilidades.length; i++) {
+		possibilidades[i].desenhar();
+	
 		if ( menor > possibilidades[i].total ) {
 			menor = possibilidades[i].total;
 			indice = i;
@@ -389,34 +342,10 @@ function verificaEAplicaMelhorPossibilidade() {
 		}
 	}
 	
-	
-	//
-	
-	/*for (var i = 0; i < possibilidades.length; i++) {
-		if (!possibilidadeJaFoiTomada(possibilidades[i])) {
-			if (menor > possibilidades[i].total) {
-				menor = possibilidades[i].total;
-				indice = i;
-				cont = 1;
-			} else if (menor == possibilidades[i].total) {
-				// desenha as opcoes no quarto canvas
-			
-				cont++;
-			}
-		}
-	}*/
-	
 	// pega essa buxa haha
 	matrizPrincipal.mat[possibilidades[indice].linha1][possibilidades[indice].coluna1].valor = matrizPrincipal.mat[possibilidades[indice].linha][possibilidades[indice].coluna].valor;
 	matrizPrincipal.mat[possibilidades[indice].linha][possibilidades[indice].coluna].valor = 0;
 	
-	// faz uma cópia da matrizPrincipal
-	//var novaMatriz = new Matriz(3, false);
-	//novaMatriz.setMatrizInterna(matrizPrincipal.mat);
-	
-	//possibilidades[indice].setMatrizParaComparacao(novaMatriz.mat);
-	
-	//possibilidadesJaTomadas.push( novaMatriz );
 	possibilidadesJaTomadas.push( possibilidades[indice] );
 }
 

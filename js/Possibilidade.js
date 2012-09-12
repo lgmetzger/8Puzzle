@@ -9,21 +9,14 @@ function Possibilidade(_matrizAuxiliar, _i, _j, _linha, _coluna) {
 	this.matrizAuxiliar = _matrizAuxiliar;
 	
 	this.setMatrizParaComparacao = function() {
-		this.mat = new Matriz(3, false);
+		this.mat = new Matriz(3, "canv_exec", 50);
 		
 		this.mat.setMatrizInterna(_matrizAuxiliar);
+	}
 	
-		/*this.mat = new Array(_matrizAuxiliar.length);
-		
-		for (var i = 0; i < _matrizAuxiliar.length; i++) {
-			this.mat[i] = new Array(_matrizAuxiliar.length);
-		}
-		
-		for (var i = 0; i < _matrizAuxiliar.length; i++) {
-			for (var j = 0; j < _matrizAuxiliar.length; j++) {
-				this.mat[i][j] = _matrizAuxiliar[i][j].valor;
-			}
-		}*/
+	this.desenhar = function() {
+		alert("desenhar");
+		this.mat.desenhar();
 	}
 	
 	this.heuristica = function () {
@@ -40,10 +33,7 @@ function Possibilidade(_matrizAuxiliar, _i, _j, _linha, _coluna) {
 		return heuristica;
 	}
 	
-	//this.total = this.heuristica() + custo + 1;
-	this.total = this.heuristica() + custo;
+	this.total = this.heuristica() + custo + 1;
 	this.setMatrizParaComparacao();
-	
-	//alert("total da possibilidade: " + this.total);
 	
 }

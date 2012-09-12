@@ -1,6 +1,6 @@
 Matriz.prototype.constructor = Matriz;
 
-function Matriz(_tamanho, _canvas){
+function Matriz(_tamanho, _canvas, _tamanhoPixels){
 	/* **********************************  Propriedades ************************************** */
 
 	// Tamanho da matriz (ela sempre sera' quadrada)
@@ -20,7 +20,11 @@ function Matriz(_tamanho, _canvas){
 	}
 	
 	// Tamanho do lado do quadrado de cada celula da matriz
-	this.tamanhoPixels = 90;
+	if (!_tamanhoPixels) {
+		this.tamanhoPixels = 90;
+	} else {
+		this.tamanhoPixels = _tamanhoPixels;
+	}
 	
 	/* **********************************  Métodos ************************************** */
 	
